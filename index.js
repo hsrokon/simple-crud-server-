@@ -24,22 +24,19 @@ async function run() {
     await client.connect();
 
     const userCollection = client.db('usersDB').collection('users');
+
+    app.get('/users', async(req, res)=> {
+        const cursor = userCollection.find();
+        const result = await cursor.toArray();
+        res.send(result);
+    })
+
     app.post('/users', async(req, res)=> {
         const newUser = req.body;
         console.log('New user', newUser);
         const result = await userCollection.insertOne(newUser);
         res.send(result);
     })
-    // const database = client.db("usersDB")
-    // const userCollection = database.collection("users")
-
-    // //my codes
-    // app.post('/users', async(req,res)=> {
-    //     const newUser = req.body;
-    //     console.log('New user', newUser);
-    //     const result = await userCollection.insertOne(newUser);
-    //     res.send(result);
-    // })
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
