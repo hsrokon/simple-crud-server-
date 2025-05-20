@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express()
 const port = process.env.PORT || 5000;
 
@@ -35,6 +35,14 @@ async function run() {
         const newUser = req.body;
         console.log('New user', newUser);
         const result = await userCollection.insertOne(newUser);
+        res.send(result);
+    })
+
+    app.delete('/users/:id', async(req, res)=>{//:id is what we're requesting in client side -${id}
+        const id = req.params.id;
+        console.log(`please delete id ${id}`);
+        const query = {_id : new ObjectId(id)}
+        const result = await userCollection.deleteOne(query);
         res.send(result);
     })
 
