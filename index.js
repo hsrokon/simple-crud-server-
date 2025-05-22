@@ -25,22 +25,32 @@ async function run() {
 
     const userCollection = client.db('usersDB').collection('users');
 
+    //get many user
     app.get('/users', async(req, res)=> {
         const cursor = userCollection.find();
         const result = await cursor.toArray();
         res.send(result);
     })
 
+    //get specific user
+    app.get('/users/:id', async(req, res)=>{
+      const id = req.params.id;
+      console.log(id);
+      const query = {_id: new ObjectId(id)}
+      const result = await userCollection.findOne(query)
+      res.send(result);
+    })
+
     app.post('/users', async(req, res)=> {
         const newUser = req.body;
-        console.log('New user', newUser);
+        // console.log('New user', newUser);
         const result = await userCollection.insertOne(newUser);
         res.send(result);
     })
 
     app.delete('/users/:id', async(req, res)=>{//:id is what we're requesting in client side -${id}
         const id = req.params.id;
-        console.log(`please delete id ${id}`);
+        // console.log(`please delete id ${id}`);
         const query = {_id : new ObjectId(id)}
         const result = await userCollection.deleteOne(query);
         res.send(result);
