@@ -48,6 +48,22 @@ async function run() {
         res.send(result);
     })
 
+    app.put('/users/:id', async(req, res)=> {
+      const id = req.params.id;
+      const reqUpdateUser = req.body;
+      console.log(reqUpdateUser);
+      const filter = {_id: new ObjectId(id)};
+      const options = { upsert: true};
+      const updateUser = {
+        $set: {
+          name: reqUpdateUser.name,
+          email: reqUpdateUser.email
+        }
+      }
+      const result = await userCollection.updateOne(filter, updateUser, options);
+      res.send(result);
+    })
+
     app.delete('/users/:id', async(req, res)=>{//:id is what we're requesting in client side -${id}
         const id = req.params.id;
         // console.log(`please delete id ${id}`);
